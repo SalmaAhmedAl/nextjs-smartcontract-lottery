@@ -1,16 +1,16 @@
 import { useMoralis } from "react-moralis"
 import { useEffect } from "react"
 export default function ManualHeader() {
-    const { enableWeb3, account, isWeb3Enabled, Moralis, deactivateWeb3 } = useMoralis() //Moralis has many accounts
+    const { enableWeb3, account, isWeb3Enabled, Moralis, deactivateWeb3, isWeb3EnableLoading } =
+        useMoralis() //Moralis has many accounts
     useEffect(() => {
         if (isWeb3Enabled) return
-        if(typeof window != "undefined"){
-             if (window.localStorage.getItem("connected")) {
-            //if the key of connected is exist
-            enableWeb3()
+        if (typeof window != "undefined") {
+            if (window.localStorage.getItem("connected")) {
+                //if the key of connected is exist
+                enableWeb3()
+            }
         }
-        }
-       
     }, [isWeb3Enabled])
     useEffect(() => {
         Moralis.onAccountChanged((account) => {
@@ -36,9 +36,10 @@ export default function ManualHeader() {
                             window.localStorage.setItem("connected", "injected")
                         }
                     }}
+                    disabled={isWeb3EnableLoading}
                 >
                     Connect
-                </button>
+                </button> 
             )}
         </div>
     )
