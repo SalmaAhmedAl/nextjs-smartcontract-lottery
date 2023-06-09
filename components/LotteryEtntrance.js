@@ -12,7 +12,8 @@ export default function LotteryEntrance() {
     const raffleAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
     const [entranceFee, setEntranceFee] = useState("0") //entranceFee is a variable and "0" ia starting value.. setEntranceFee is a function
     const dispatch = useNotification()
-
+    const [numPlayer, setNumPlayers] = useState("0") 
+    const [recentWinner, setRecentWinner] = useState("0") 
     //Function we will call to enter the lottery (runContractFunction)
     const { runContractFunction: enterRaffle } = useWeb3Contract({
         abi: abi,
@@ -27,7 +28,20 @@ export default function LotteryEntrance() {
         functionName: "getEntranceFee",
         params: {},
     })
-
+    
+    const { runContractFunction: getNumberOfPlayers } = useWeb3Contract({
+        abi: abi,
+        contractAddress: raffleAddress,
+        functionName: "getNumberOfPlayers",
+        params: {},
+    })
+    //getRecentWinner
+    const { runContractFunction: getRecentWinner } = useWeb3Contract({
+        abi: abi,
+        contractAddress: raffleAddress,
+        functionName: "getRecentWinner",
+        params: {},
+    })
     useEffect(() => {
         if (isWeb3Enabled) {
             //try to read raffle entrace fee value
@@ -59,9 +73,11 @@ export default function LotteryEntrance() {
             {raffleAddress ? (
                 <div>
                     <button
+                    //{} write JS code in it
                         onClick={async function () {
                             await enterRaffle({
                                 onSuccess:handleSuccess,
+                                onError: (error) => console.log(error),
                             })
                         }}
                     >
